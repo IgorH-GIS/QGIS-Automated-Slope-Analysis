@@ -1,20 +1,35 @@
-# QGIS Automated Slope Analysis (PyQGIS) 🛰️📊
+"""
+QGIS Zonal Statistics Automated Analyzer
+Author: Igor Hajducki | Global Ortho Solutions
+Description: Automated PyQGIS script to calculate the average slope of a defined 
+polygon area using drone-derived DEM/Slope raster maps.
+"""
+import processing
 
-An automated Python script designed for QGIS (PyQGIS) to calculate the exact average slope of a defined polygon area using drone-derived Elevation/Slope raster maps.
+# Fetch active layers
+raster_layer = QgsProject.instance().mapLayersByName('Prudnik_Slope_Final')[0]
+vector_layer = QgsProject.instance().mapLayersByName('Property_Boundary')[0] 
 
-## 🎯 Use Case
-When analyzing drone photogrammetry data (e.g., for roof inspections, solar panel installation, or terrain leveling), manual slope estimation is prone to error. This script automates the **Zonal Statistics** process, extracting precise mathematical averages directly from raster pixel values bounded by a specific vector geometry.
+print("Initializing spatial analysis...")
 
-## ⚙️ How it works
-1. Fetches the active Vector Layer (e.g., `Property_Boundary`).
-2. Fetches the targeted Raster Layer (e.g., `Prudnik_Slope_Final`).
-3. Runs the QGIS `native:zonalstatisticsfb` algorithm in temporary memory.
-4. Outputs a clean, automated report in the Python Console with the exact average slope in degrees.
+# Define processing parameters
+params = {
+    'INPUT': vector_layer,
+    'INPUT_RASTER': raster_layer,
+    'RASTER_BAND': 1,
+    'COLUMN_PREFIX': 'analysis_',
+    'STATISTICS': [2], 
+    'OUTPUT': 'TEMPORARY_OUTPUT'
+}
 
-## 🛠️ Tech Stack
-* **GIS Software:** QGIS 3.x
-* **Language:** Python 3 (PyQGIS API)
-* **Data Input:** Drone mapping outputs (DEM / DSM / Slope Rasters)
+# Execute zonal statistics
+calculation_result = processing.run("native:zonalstatisticsfb", params)
+result_layer = calculation_result['OUTPUT']
 
----
-*Developed by Igor Hajducki | Global Ortho Solutions*
+# Output results
+for feature in result_layer.getFeatures():
+    mean_result = feature['analysis_mean']
+    print("\n" + "-"*50)
+    print(f"AUTOMATED REPORT FOR: {vector_layer.name()}")
+    print(f"Average surface slope: {round(mean_result, 2)} degrees")
+    print("-"*50)
