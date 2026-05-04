@@ -1,6 +1,6 @@
 """
 QGIS Zonal Statistics Automated Analyzer
-Author: Igor Hajducki | Global Ortho Solutions
+Author: Igor Hajducki | DroneCube Analytics
 Description: Automated PyQGIS script to calculate the average slope of a defined 
 polygon area using drone-derived DEM/Slope raster maps.
 """
