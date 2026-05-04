@@ -17,4 +17,4 @@ When analyzing drone photogrammetry data (e.g., for roof inspections, solar pane
 * **Data Input:** Drone mapping outputs (DEM / DSM / Slope Rasters)
 
 ---
-*Developed by Igor Hajducki | Global Ortho Solutions*
+*Developed by Igor Hajducki | DroneCube Analytics*
